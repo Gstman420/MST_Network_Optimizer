@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MST Network Optimizer 🌐</title>
+<style>
+  body {
+    font-family: "Poppins", sans-serif;
+    background: #0b132b;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+  }
+  .container {
+    background: #1c2541;
+    border-radius: 12px;
+    padding: 20px;
+    max-width: 600px;
+    margin: auto;
+    box-shadow: 0 0 10px rgba(0,0,0,0.4);
+  }
+  input, button {
+    margin: 8px;
+    padding: 8px;
+    border-radius: 8px;
+    border: none;
+  }
+  input[type="number"] {
+    width: 80px;
+    text-align: center;
+  }
+  button {
+    background-color: #5bc0be;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #3aafa9;
+  }
+  pre {
+    text-align: left;
+    background: #0d1b2a;
+    padding: 10px;
+    border-radius: 8px;
+    overflow-x: auto;
+  }
+</style>
+</head>
+<body>
+
+<h1>🌐 MST Network Optimizer</h1>
+<div class="container">
+  <label>Enter Number of Cities:</label>
+  <input type="number" id="cityCount" min="2" placeholder="e.g. 4">
+  <button onclick="generateMatrix()">Generate</button>
+
+  <div id="matrixContainer"></div>
+
+  <button id="submitBtn" style="display:none;" onclick="computeMST()">Compute MST</button>
+
+  <h3>Result:</h3>
+  <pre id="result"></pre>
+</div>
+
+<script>
+function generateMatrix() {
+  const n = parseInt(document.getElementById("cityCount").value);
+  const container = document.getElementById("matrixContainer");
+  container.innerHTML = "";
+
+  if (isNaN(n) || n < 2) {
+    alert("Enter a valid number of cities (>=2)");
+    return;
+  }
+
+  let html = `<h3>Enter connection costs (0 if no connection):</h3>`;
+  for (let i = 0; i < n; i++) {
+    for (let j = i + 1; j < n; j++) {
+      html += `City ${i} ↔ City ${j}: <input type="number" id="cost_${i}_${j}" min="0" value="0"><br>`;
+    }
+  }
+  container.innerHTML = html;
+  document.getElementById("submitBtn").style.display = "inline-block";
+}
+
+async function computeMST() {
+  const n = parseInt(document.getElementById("cityCount").value);
+  let data = n + "\n";
+
+  for (let i = 0; i < n; i++) {
+    for (let j = i + 1; j < n; j++) {
+      const val = document.getElementById(`cost_${i}_${j}`).value || "0";
+      data += val + " ";
+    }
+  }
+
+  const res = await fetch("/run_mst", {
+    method: "POST",
+    headers: { "Content-Type": "text/plain" },
+    body: data
+  });
+
+  const text = await res.text();
+  document.getElementById("result").textContent = text;
+}
+</script>
+</body>
+</html>
