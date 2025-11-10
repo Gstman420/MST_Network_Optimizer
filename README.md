@@ -35,10 +35,10 @@ Kruskal’s Algorithm follows a **Greedy Approach** to build the MST:
 
 MST_Network_Optimizer/
 │
-├── mst_backend.c — Kruskal’s MST algorithm in C
-├── server.py — Flask backend to run the C code
-├── index.html — Web interface for user input
-└── README.md — Project documentation
+├── mst_backend.c   — Kruskal’s MST algorithm in C
+├── server.py       — Flask backend to run the C code
+├── index.html      — Web interface for user input
+└── README.md       — Project documentation
 
 
 ---
